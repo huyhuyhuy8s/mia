@@ -681,7 +681,7 @@ def VN(username):
 			if thoigian >= 23 or thoigian <= 3: #Ngủ đei
 				ans = VN_doyouwanttosleep()
 				if "có" in ans or "Có" in ans:
-					VN_shutdown()
+					VNshutdown()
 					break
 				else:
 					VN_cont()
@@ -780,7 +780,7 @@ def EN(username):
 			if thoigian >= 23 or thoigian <= 3: #Ngủ đei
 				ans = EN_doyouwanttosleep()
 				if "yes" in ans or "Yes" in ans:
-					EN_shutdown()
+					ENshutdown()
 					break
 				else:
 					EN_cont()
