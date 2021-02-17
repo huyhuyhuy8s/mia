@@ -22,6 +22,7 @@ import sys
 sys.path.append('.\\data')
 #Thư viện python của developer
 import new
+from users_compare import users_compare
 
 mia_ear = sr.Recognizer()
 mia_mouth = pyttsx3.init()
@@ -967,8 +968,3 @@ def EN_compare(you,username,loichao):
 
 if __name__ == "__main__":
 	main()
-
-def users_compare(you,username,loichao):
-	if "username" in you:
-		mia_brain = username
-		return mia_brain
