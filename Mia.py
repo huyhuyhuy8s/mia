@@ -264,7 +264,7 @@ def VN_music(you): #Music
 	mia_brain = f"Đang bật {x}"
 	print("Mia: "+ str(mia_brain))
 	noi(gTTS(mia_brain,lang='vi',slow=False))
-	time.sleep(240)
+	os.system("pause")
 	runai=1
 	return runai
 
@@ -275,7 +275,7 @@ def EN_music(you): #Music
 	mia_brain = f"Playing {x}"
 	print("Mia: "+ str(mia_brain))
 	say(mia_brain)
-	time.sleep(240)
+	os.system("pause")
 	runai=1
 	return runai
 
@@ -302,7 +302,7 @@ def VN_search(): #Google search
 		audio = mia_ear.listen(mic,timeout=5, phrase_time_limit=5)
 		# audio = mia_ear.adjust_for_ambient_noise(mic)
 	try:
-		query = mia_ear.recognize_google(audio)
+		query = mia_ear.recognize_google(audio, language="vi-VI")
 	except:
 		query = input("Nhập thông tin cần tìm: ")
 	final_url = "https://www.google.com/search?&q=" + query.replace(" ","%20")
@@ -334,16 +334,14 @@ def EN_search(): #Google search
 def VN_facebook(): #Facebook
 	webbrowser.open('https://www.facebook.com/',new=1)
 	mia_brain="Facebook đang được bật"
-	print('you: ',you)
 	print('Mia: ',mia_brain)
 	noi(gTTS(mia_brain,lang='vi',slow=False))
 	runai=2
 	return runai
 
-def EN_facebook(): #Facebook
+def EN_facebook(you): #Facebook
 	webbrowser.open('https://www.facebook.com/',new=1)
 	mia_brain="Facebook is opening"
-	print('you: ',you)
 	print('Mia: ',mia_brain)
 	say(mia_brain)
 	runai=2
@@ -368,6 +366,7 @@ def VN_wikipedia(): #Wikipedia
 		return runai
 
 	if wiki != "Mình xin lỗi":
+		webbrowser.open('https://vi.wikipedia.org/wiki/'+ wiki.replace(" ","_"))
 		wikipedia.set_lang("vi")
 		wiki=wikipedia.summary(wiki)
 		print("Wikipedia: " + wiki)
@@ -399,6 +398,7 @@ def EN_wikipedia(): #Wikipedia
 		return runai
 
 	if wiki != "I'm so sorry!!":
+		webbrowser.open('https://en.wikipedia.org/wiki/'+ wiki.replace(" ","_"))
 		wikipedia.set_lang("en")
 		wiki=wikipedia.summary(wiki)
 		print("Wikipedia: " + wiki)
@@ -671,13 +671,6 @@ def VN(username):
 		
 		if "Hi Mia" in you or "hi Mia" in you or "hey Mia" in you or "Hey Mia" in you or "Hey" in you or "hey" in you or "Chào Mia" in you:
 			o=2
-			# Get current volume 
-			currentVolumeDb = volume.GetMasterVolumeLevel()
-			currentVol=currentVolumeDb
-			volume.SetMasterVolumeLevel(-28, None)
-			currentVolumeDb2 = volume.GetMasterVolumeLevel()
-			times=currentVolumeDb - currentVolumeDb2
-			volume.SetMasterVolumeLevel(currentVolumeDb, None)
 
 			if thoigian >= 23 or thoigian <= 3: #Ngủ đei
 				ans = VN_doyouwanttosleep()
@@ -693,6 +686,13 @@ def VN(username):
 
 			#Vòng lặp chính của chương trình (Dừng khi 3 lần lặp lỗi)
 			while stopai<3:
+				# Get current volume 
+				currentVolumeDb = volume.GetMasterVolumeLevel()
+				currentVol=currentVolumeDb
+				volume.SetMasterVolumeLevel(-28, None)
+				currentVolumeDb2 = volume.GetMasterVolumeLevel()
+				times=currentVolumeDb - currentVolumeDb2
+				volume.SetMasterVolumeLevel(currentVolumeDb, None)
 				with sr.Microphone() as mic:
 					mia_brain = "Mình đang nghe đây"
 					print("Mia: ",mia_brain)
@@ -770,13 +770,6 @@ def EN(username):
 		
 		if "Hi Mia" in you or "hi Mia" in you or "hey Mia" in you or "Hey Mia" in you or "Hey" in you or "hey" in you or "Chào Mia" in you:
 			o=2
-			# Get current volume 
-			currentVolumeDb = volume.GetMasterVolumeLevel()
-			currentVol=currentVolumeDb
-			volume.SetMasterVolumeLevel(-28, None)
-			currentVolumeDb2 = volume.GetMasterVolumeLevel()
-			times=currentVolumeDb - currentVolumeDb2
-			volume.SetMasterVolumeLevel(currentVolumeDb, None)
 
 			if thoigian >= 23 or thoigian <= 3: #Ngủ đei
 				ans = EN_doyouwanttosleep()
@@ -792,6 +785,13 @@ def EN(username):
 
 			#Vòng lặp chính của chương trình (Dừng khi 3 lần lặp lỗi)
 			while stopai<3:
+				# Get current volume 
+				currentVolumeDb = volume.GetMasterVolumeLevel()-1
+				currentVol=currentVolumeDb
+				volume.SetMasterVolumeLevel(-28, None)
+				currentVolumeDb2 = volume.GetMasterVolumeLevel()
+				times=currentVolumeDb - currentVolumeDb2
+				volume.SetMasterVolumeLevel(currentVolumeDb, None)
 				with sr.Microphone() as mic:
 					mia_brain = "I'm listening"
 					print("Mia: ",mia_brain)
@@ -857,14 +857,24 @@ def VN_compare(you,username,loichao):
 	elif "giờ" in you:
 		mia_brain = VN_clock()
 		return mia_brain
-	elif "Play" in you or "play" in you or "nhạc" in you:
+	elif "Play" in you or "play" in you or "nhạc" in you or "Music" in you or "music" in you:
 		if "music" in you:
 			mia_brain = "Đang mở youtube"
 			webbrowser.open('https://www.youtube.com/',new=1)
-			return mia_brain
+			print(mia_brain)
+			noi(gTTS(mia_brain,lang='vi',slow=False))
+			runai=2
+			return runai
 		else:
 			mia_brain = VN_music(you)
 			return mia_brain
+	elif "Youtube" in you or "youtube" in you:
+		mia_brain = "Đang mở youtube"
+		webbrowser.open('https://www.youtube.com/',new=1)
+		print(mia_brain)
+		noi(gTTS(mia_brain,lang='vi',slow=False))
+		runai=2
+		return runai
 	elif "Opera" in you or "Google" in you or "duyệt web" in you or "Duyệt web" in you: 
 		mia_brain = VN_browser()
 		return mia_brain
@@ -874,7 +884,7 @@ def VN_compare(you,username,loichao):
 	elif "Facebook" in you:
 		mia_brain = VN_facebook()
 		return mia_brain
-	elif "Wikipedia" in you:
+	elif "Wikipedia" in you or "wiki" in you or "Wiki" in you:
 		mia_brain = VN_wikipedia()
 		return mia_brain
 	elif "tắt máy" in you or "Tắt máy" in you or "Shut down" in you or "shut down" in you:
@@ -922,13 +932,23 @@ def EN_compare(you,username,loichao):
 		mia_brain = EN_clock()
 		return mia_brain
 	elif "Play" in you or "play" in you:
-		if "music" in you:
-			mia_brain = "Opening Youtube"
+		if "music" in you:		
+			mia_brain = "Đang mở youtube"
 			webbrowser.open('https://www.youtube.com/',new=1)
-			return mia_brain
+			print(mia_brain)
+			noi(gTTS(mia_brain,lang='vi',slow=False))
+			runai=2
+			return runai
 		else:
 			mia_brain = EN_music(you)
 			return mia_brain
+	elif "Youtube" in you or "youtube" in you:
+		mia_brain = "Opening youtube"
+		webbrowser.open('https://www.youtube.com/',new=1)
+		print(mia_brain)
+		say(mia_brain)
+		runai=2
+		return runai
 	elif "Opera" in you or "Google" in you or "webbrowser" in you or "Webbrowser" in you: 
 		mia_brain = EN_browser()
 		return mia_brain
