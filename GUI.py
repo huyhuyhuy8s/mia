@@ -21,7 +21,6 @@ window.resizable(0, 0)
 window.config(bg='ghost white')
 
 
-
 def EN():
 	#Label
 	lbl = tkinter.Label(window, text="Configure", bg="ghost white" , font=("", 20))

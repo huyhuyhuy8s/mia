@@ -264,8 +264,8 @@ def VN_music(you): #Music
 	mia_brain = f"Đang bật {x}"
 	print("Mia: "+ str(mia_brain))
 	noi(gTTS(mia_brain,lang='vi',slow=False))
-	os.system("pause")
-	runai=1
+	# os.system("pause")
+	runai=2
 	return runai
 
 def EN_music(you): #Music
@@ -275,8 +275,8 @@ def EN_music(you): #Music
 	mia_brain = f"Playing {x}"
 	print("Mia: "+ str(mia_brain))
 	say(mia_brain)
-	os.system("pause")
-	runai=1
+	# os.system("pause")
+	runai=2
 	return runai
 
 def VN_browser(): #Chạy web
@@ -530,22 +530,36 @@ def EN_goodnight(): #Ngủ
 	runai=2
 	return runai
 
-def VN_volumedown(): #Giảm volume
+def VN_sleep():
+	mia_brain="Đang vào trạng thái ngủ"
+	print("Mia: ",mia_brain)
+	noi(gTTS(mia_brain,lang='vi',slow=False))
+	runai=2
+	return runai
+
+def EN_sleep():
+	mia_brain="Sleeping"
+	print("Mia: ",mia_brain)
+	say(mia_brain)
+	runai=2
+	return runai
+
+def VN_volumedown(volume): #Giảm volume
 	mia_brain="Volume đang được giảm: 25!"
 	volume.SetMasterVolumeLevel(-20, None)
 	return mia_brain
 
-def EN_volumedown(): #Giảm volume
+def EN_volumedown(volume): #Giảm volume
 	mia_brain="Volume is decreasing: 25!"
 	volume.SetMasterVolumeLevel(-20, None)
 	return mia_brain
 
-def VN_volumeup(): #Tăng volume
+def VN_volumeup(volume): #Tăng volume
 	mia_brain="Volume đang được tăng: 75!"
 	volume.SetMasterVolumeLevel(-4.4, None)
 	return mia_brain
 
-def EN_volumeup(): #Tăng volume
+def EN_volumeup(volume): #Tăng volume
 	mia_brain="Volume is raising: 75!"
 	volume.SetMasterVolumeLevel(-4.4, None)
 	return mia_brain
@@ -703,7 +717,7 @@ def VN(username):
 						volume.SetMasterVolumeLevel(currentVolumeDb -0.4, None) # decreases the system volume by 1
 						time.sleep(0.7/times)
 					audio = mia_ear.listen(mic,timeout=5, phrase_time_limit=5)
-					while currentVolumeDb<=currentVol:
+					while currentVolumeDb<currentVol:
 						currentVolumeDb=currentVolumeDb + 1
 						volume.SetMasterVolumeLevel(currentVolumeDb, None) # decreases the system volume by 1
 						time.sleep(0.7/times)
@@ -721,9 +735,9 @@ def VN(username):
 				print("You: " + you)
 
 				if you != '':
-					mia_brain = VN_compare(you,username,loichao)
+					mia_brain = VN_compare(you,username,loichao,volume)
 					if mia_brain == None:
-						mia_brain = users_compare(you,username,loichao)
+						mia_brain = users_compare(you,username,loichao,volume)
 						if mia_brain == None:
 							print(f"Mia: Bạn có thể xem qua các kết quả tìm kiếm của {you}\n" + str('"https://www.google.com/search?&q="' + you.replace(" ","%20")))
 							mia_brain="Xin lỗi! Mình chưa được dạy về nó, hãy thử lại nhé."
@@ -802,7 +816,7 @@ def EN(username):
 						volume.SetMasterVolumeLevel(currentVolumeDb -0.4, None) # decreases the system volume by 1
 						time.sleep(0.7/times)
 					audio = mia_ear.listen(mic,timeout=5, phrase_time_limit=5)
-					while currentVolumeDb<=currentVol:
+					while currentVolumeDb<currentVol:
 						currentVolumeDb=currentVolumeDb + 1
 						volume.SetMasterVolumeLevel(currentVolumeDb, None) # decreases the system volume by 1
 						time.sleep(0.7/times)
@@ -820,9 +834,9 @@ def EN(username):
 				print("You: " + you)
 
 				if you != '':
-					mia_brain = EN_compare(you,username,loichao)
+					mia_brain = EN_compare(you,username,loichao,volume)
 					if mia_brain == None:
-						mia_brain = users_compare(you,username,loichao)
+						mia_brain = users_compare(you,username,loichao,volume)
 						if mia_brain == None:
 							print(f"Mia: You can check these search for {you}\n" + str('"https://www.google.com/search?&q="' + you.replace(" ","%20")))
 							mia_brain="Sorry, I haven't learnt it yet! Let's try something else."
@@ -838,7 +852,7 @@ def EN(username):
 					print("Mia: "+ str(mia_brain))
 					say(mia_brain)
 
-def VN_compare(you,username,loichao):
+def VN_compare(you,username,loichao,volume):
 	if "Chào" in you or "Xin chào" in you or "hi" in you or "Hello" in you:
 		mia_brain = VN_hi(loichao)
 		return mia_brain
@@ -893,26 +907,29 @@ def VN_compare(you,username,loichao):
 	elif "khởi động lại" in you or "Khởi động lại" in you or "restart" in you or "Restart" in you:
 		mia_brain = VN_restart()
 		return mia_brain
-	elif "ngủ" in you or "Ngủ" in you or "sleep" in you:
+	elif "nghỉ ngơi" in you or "Nghỉ ngơi" in you or "break" in you:
 		mia_brain = VN_break()
+		return mia_brain
+	elif "Ngủ" in you or "ngủ" in you or "sleep" in you or "Sleep" in you:
+		mia_brain = VN_sleep()
 		return mia_brain
 	elif "bye" in you or "tạm biệt" in you or "Tạm biệt" in you:
 		mia_brain = VN_bye()
 		return mia_brain
-	elif "Goodnight" in you or "goodnight" in you:
+	elif "Good night" in you or "goodnight" in you:
 		mia_brain = VN_goodnight()
 		return mia_brain
 	elif "what the f***" in you:
 		mia_brain = "fuck you"
 		return mia_brain
-	elif "giảm volume" in you:
-		mia_brain = VN_volumedown()
+	elif "giảm volume" in you or "giảm âm lượng" in you:
+		mia_brain = VN_volumedown(volume)
 		return mia_brain
-	elif "tăng volume" in you:
-		mia_brain = VN_volumeup()
+	elif "tăng volume" in you or "tăng âm lượng" in you:
+		mia_brain = VN_volumeup(volume)
 		return mia_brain
 
-def EN_compare(you,username,loichao):
+def EN_compare(you,username,loichao,volume):
 	if "Hi" in you or "Hello" in you or "hi" in you or "hello" in you:
 		mia_brain = EN_hi(loichao)
 		return mia_brain
@@ -967,8 +984,11 @@ def EN_compare(you,username,loichao):
 	elif "restart" in you or "Restart" in you:
 		mia_brain = EN_restart()
 		return mia_brain
-	elif "Sleep" in you or "break" in you or "sleep" in you:
+	elif "Break" in you or "break" in you:
 		mia_brain = EN_break()
+		return mia_brain
+	elif "sleep" in you or "Sleep" in you:
+		mia_brain = EN_sleep()
 		return mia_brain
 	elif "bye" in you or "Bye" in you:
 		mia_brain = EN_bye()
@@ -980,10 +1000,10 @@ def EN_compare(you,username,loichao):
 		mia_brain = "fuck you"
 		return mia_brain
 	elif "volume down" in you:
-		mia_brain = EN_volumedown()
+		mia_brain = EN_volumedown(volume)
 		return mia_brain
 	elif "volume up" in you:
-		mia_brain = EN_volumeup()
+		mia_brain = EN_volumeup(volume)
 		return mia_brain
 
 if __name__ == "__main__":
