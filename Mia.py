@@ -24,6 +24,7 @@ sys.path.append('.\\data')
 import new
 from users_compare import users_compare
 
+# Các biến số ban đầu
 mia_ear = sr.Recognizer()
 mia_mouth = pyttsx3.init()
 mia_brain = ""
@@ -149,7 +150,7 @@ def VN_time(username): #Xác định lời chào
 	if 5 < thoigian < 12:
 		loichao = "Chào buổi sáng " + str(username)
 	elif 12 <= thoigian < 13:
-		loichao = str(username) + ", Mình nghỉ bạn nên nghỉ ngơi một tí!"
+		loichao = str(username) + ", Mình nghĩ bạn nên nghỉ ngơi một tí!"
 	elif 13 <= thoigian < 17:
 		loichao = "Chào buổi chiều " + str(username)
 	elif 17 <= thoigian < 23:
@@ -269,7 +270,7 @@ def VN_music(you): #Music
 	return runai
 
 def EN_music(you): #Music
-	x = you[you.index(" "):]
+	x = you[you.index("Play "):]
 	results = YoutubeSearch(x, max_results=10).to_dict()
 	webbrowser.open('https://www.youtube.com' + str(results[0]['url_suffix']))
 	mia_brain = f"Playing {x}"
@@ -530,14 +531,14 @@ def EN_goodnight(): #Ngủ
 	runai=2
 	return runai
 
-def VN_sleep():
+def VN_sleep(): #Sleep
 	mia_brain="Đang vào trạng thái ngủ"
 	print("Mia: ",mia_brain)
 	noi(gTTS(mia_brain,lang='vi',slow=False))
 	runai=2
 	return runai
 
-def EN_sleep():
+def EN_sleep(): #Sleep
 	mia_brain="Sleeping"
 	print("Mia: ",mia_brain)
 	say(mia_brain)
@@ -564,16 +565,34 @@ def EN_volumeup(volume): #Tăng volume
 	volume.SetMasterVolumeLevel(-4.4, None)
 	return mia_brain
 
+def VN_newspaper(you,x): #Đọc báo
+	webbrowser.open('https://timkiem.vnexpress.net/?q=' + x.replace(" ","%20"))
+	mia_brain = f"Đang tìm kiếm trên Vnexpress về {x}"
+	print("Mia: "+ str(mia_brain))
+	noi(gTTS(mia_brain,lang='vi',slow=False))
+	runai=2
+	return runai
+
+def EN_newspaper(you,x): #Đọc báo
+	webbrowser.open('https://www.nytimes.com/search?query=' + x.replace(" ","+"))
+	mia_brain = f"Searching on 'Then New York Times' about {x}"
+	print("Mia: "+ str(mia_brain))
+	say(mia_brain)
+	runai=2
+	return runai
+
 def VN_teach(): #Dạy AI - Machine Learning
 	learn = input("Nếu mình nghe <input>: ")
 	answer = input("Mình sẽ trả lời <output>: ")
 	if learn != "" and answer != "":
-		file1 = open("mia3.py","a+")
+		os.chdir('.\\data')
+		file1 = open("users_compare.py","a+")
 		file1.seek(157)
 		file1.write("\n" + '	' + 'elif ' + '"' + str(learn) + '"' + ' in you:\n')
 		file1.writelines('		mia_brain = ' + '"' + str(answer) + '"' + '\n')
 		file1.writelines('		return mia_brain')
 		mia_brain = "Dạy học thành công! Cảm ơn bạn đã giúp đỡ!"
+		os.chdir('..')
 	else:
 		mia_brain = "Dạy học thất bại"
 	return mia_brain
@@ -582,15 +601,35 @@ def EN_teach(): #Dạy AI - Machine Learning
 	learn = input("When i hear <input>: ")
 	answer = input("i will say <output>: ")
 	if learn != "" and answer != "":
-		file1 = open("mia3.py","a+")
+		os.chdir('.\\data')
+		file1 = open("users_compare.py","a+")
 		file1.seek(157)
 		file1.write("\n" + '	' + 'elif ' + '"' + str(learn) + '"' + ' in you:\n')
 		file1.writelines('		mia_brain = ' + '"' + str(answer) + '"' + '\n')
 		file1.writelines('		return mia_brain')
 		mia_brain = "Learning succeed! Thanks for your teaching!"
+		os.chdir('..')
 	else:
 		mia_brain = "Learning failed"
 	return mia_brain
+
+def VN_setting():
+	mia_brain = "Giao diện cài đặt đang được mở"
+	print("Mia: ",mia_brain)
+	noi(gTTS(mia_brain,lang='vi',slow=False))
+	time.sleep(5)
+	os.system("GUI.py")
+	runai=1
+	return runai
+	
+def EN_setting():
+	mia_brain = "Setting GUI is opening"
+	print("Mia: ",mia_brain)
+	say(mia_brain)
+	time.sleep(5)
+	os.system("GUI.py")
+	runai=1
+	return runai
 
 def main():
 	ok=False
@@ -739,7 +778,7 @@ def VN(username):
 					if mia_brain == None:
 						mia_brain = users_compare(you,username,loichao,volume)
 						if mia_brain == None:
-							print(f"Mia: Bạn có thể xem qua các kết quả tìm kiếm của {you}\n" + str('"https://www.google.com/search?&q="' + you.replace(" ","%20")))
+							print(f"Mia: Bạn có thể xem qua các kết quả tìm kiếm của {you}\n" + str('"https://www.google.com/search?&q=' + you.replace(" ","%20")) + '"')
 							mia_brain="Xin lỗi! Mình chưa được dạy về nó, hãy thử lại nhé."
 				else:
 					VN_tryagain()
@@ -871,8 +910,8 @@ def VN_compare(you,username,loichao,volume):
 	elif "giờ" in you:
 		mia_brain = VN_clock()
 		return mia_brain
-	elif "Play" in you or "play" in you or "nhạc" in you or "Music" in you or "music" in you:
-		if "music" in you:
+	elif "Play" in you or "play" in you or "nhạc" in you or "Music" in you or "music" in you or "Youtube" in you or "youtube" in you:
+		if "Play music" == you or "play music" == you or "Âm nhạc" == you or "âm nhạc" == you or "music" == you or "Music" == you or "Youtube" == you or "youtube" == you:
 			mia_brain = "Đang mở youtube"
 			webbrowser.open('https://www.youtube.com/',new=1)
 			print(mia_brain)
@@ -882,14 +921,7 @@ def VN_compare(you,username,loichao,volume):
 		else:
 			mia_brain = VN_music(you)
 			return mia_brain
-	elif "Youtube" in you or "youtube" in you:
-		mia_brain = "Đang mở youtube"
-		webbrowser.open('https://www.youtube.com/',new=1)
-		print(mia_brain)
-		noi(gTTS(mia_brain,lang='vi',slow=False))
-		runai=2
-		return runai
-	elif "Opera" in you or "Google" in you or "duyệt web" in you or "Duyệt web" in you: 
+	elif "Opera" in you or "Google" in you or "duyệt web" in you or "Duyệt web" in you or "Lướt web" in you: 
 		mia_brain = VN_browser()
 		return mia_brain
 	elif "tìm kiếm" in you:
@@ -928,6 +960,30 @@ def VN_compare(you,username,loichao,volume):
 	elif "tăng volume" in you or "tăng âm lượng" in you:
 		mia_brain = VN_volumeup(volume)
 		return mia_brain
+	elif "đọc báo" in you or "Đọc báo" in you:
+		if "Đọc báo" == you or "đọc báo" == you:
+			mia_brain = "Đang mở Vnexpress"
+			webbrowser.open('https://vnexpress.net',new=1)
+			print(mia_brain)
+			noi(gTTS(mia_brain,lang='vi',slow=False))
+			runai=2
+			return runai
+		elif "Đọc báo " in you or "đọc báo " in you:
+			x = you[you.index("báo ")+4:]
+			mia_brain = VN_newspaper(you,x)
+			# os.system("pause")
+			return mia_brain
+		elif "Đọc báo về " in you or "đọc báo về " in you:
+			x = you[you.index("về ")+3:]
+			mia_brain = VN_newspaper(you,x)
+			# os.system("pause")
+			return mia_brain
+	elif "cài đặt" in you or "tùy chỉnh" in you or "setting" in you or "option" in you or "config" in you:
+		mia_brain = VN_setting()
+		return mia_brain
+	elif "dạy" in you:
+		mia_brain = VN_teach()
+		return mia_brain
 
 def EN_compare(you,username,loichao,volume):
 	if "Hi" in you or "Hello" in you or "hi" in you or "hello" in you:
@@ -948,9 +1004,9 @@ def EN_compare(you,username,loichao,volume):
 	elif "time" in you:
 		mia_brain = EN_clock()
 		return mia_brain
-	elif "Play" in you or "play" in you:
-		if "music" in you:		
-			mia_brain = "Đang mở youtube"
+	elif "Play" in you or "play" in you or "Music" in you or "music" in you or "Youtube" in you or "youtube" in you:
+		if "Play music" == you or "play music" == you or "music" == you or "Music" == you or "Youtube" == you or "youtube" == you:	
+			mia_brain = "Đang mở Youtube"
 			webbrowser.open('https://www.youtube.com/',new=1)
 			print(mia_brain)
 			noi(gTTS(mia_brain,lang='vi',slow=False))
@@ -959,13 +1015,6 @@ def EN_compare(you,username,loichao,volume):
 		else:
 			mia_brain = EN_music(you)
 			return mia_brain
-	elif "Youtube" in you or "youtube" in you:
-		mia_brain = "Opening youtube"
-		webbrowser.open('https://www.youtube.com/',new=1)
-		print(mia_brain)
-		say(mia_brain)
-		runai=2
-		return runai
 	elif "Opera" in you or "Google" in you or "webbrowser" in you or "Webbrowser" in you: 
 		mia_brain = EN_browser()
 		return mia_brain
@@ -1004,6 +1053,30 @@ def EN_compare(you,username,loichao,volume):
 		return mia_brain
 	elif "volume up" in you:
 		mia_brain = EN_volumeup(volume)
+		return mia_brain
+	elif "newspaper" in you or "reading newspaper" in you or "read newspaper" in you:
+		if "reading newspaper" == you or "read newspaper" == you or "newspaper" == you:
+			mia_brain = "Opening Vnexpress"
+			webbrowser.open('https://www.nytimes.com',new=1)
+			print(mia_brain)
+			say(mia_brain)
+			runai=2
+			return runai
+		elif "read newspaper " in you or "reading newspaper " in you or "newspaper " in you:
+			x = you[you.index("newspaper ")+10:]
+			mia_brain = EN_newspaper(you,x)
+			# os.system("pause")
+			return mia_brain
+		elif "read newspaper about" in you or "reading newspaper about" in you or "newspaper about" in you:
+			x = you[you.index("about ")+6:]
+			mia_brain = EN_newspaper(you,x)
+			# os.system("pause")
+			return mia_brain
+	elif "config" in you or "configure" in you or "setting" in you or "option" in you:
+		mia_brain = EN_setting()
+		return mia_brain
+	elif "teach" in you or "teaching" in you or "study" in you:
+		mia_brain = EN_teach()
 		return mia_brain
 
 if __name__ == "__main__":
