@@ -709,7 +709,7 @@ def VN(username):
 	thoigian = int(x.strftime("%H"))
 	o=0 
 	stopai=0
-
+	temp=""
 	while True:
 		with sr.Microphone() as mic:
 			mia_brain="Đang chờ lệnh!"
@@ -774,11 +774,12 @@ def VN(username):
 				print("You: " + you)
 
 				if you != '':
-					mia_brain = VN_compare(you,username,loichao,volume)
+					mia_brain = VN_compare(you,username,loichao,volume,temp)
 					if mia_brain == None:
 						mia_brain = users_compare(you,username,loichao,volume)
 						if mia_brain == None:
-							print(f"Mia: Bạn có thể xem qua các kết quả tìm kiếm của {you}\n" + str('"https://www.google.com/search?&q=' + you.replace(" ","%20")) + '"')
+							temp=str('https://www.google.com/search?&q=' + you.replace(" ","%20"))
+							print(f"Mia: Bạn có thể xem qua các kết quả tìm kiếm của {you}\n{temp}")
 							mia_brain="Xin lỗi! Mình chưa được dạy về nó, hãy thử lại nhé."
 				else:
 					VN_tryagain()
@@ -808,7 +809,7 @@ def EN(username):
 	thoigian = int(x.strftime("%H"))
 	o=0 
 	stopai=0
-
+	temp=""
 	while True:
 		with sr.Microphone() as mic:
 			mia_brain="I'm waitting!"
@@ -873,11 +874,12 @@ def EN(username):
 				print("You: " + you)
 
 				if you != '':
-					mia_brain = EN_compare(you,username,loichao,volume)
+					mia_brain = EN_compare(you,username,loichao,volume,temp)
 					if mia_brain == None:
 						mia_brain = users_compare(you,username,loichao,volume)
 						if mia_brain == None:
-							print(f"Mia: You can check these search for {you}\n" + str('"https://www.google.com/search?&q="' + you.replace(" ","%20")))
+							temp=str('https://www.google.com/search?&q=' + you.replace(" ","%20"))
+							print(f"Mia: You can check these search for {you}\n{temp}")
 							mia_brain="Sorry, I haven't learnt it yet! Let's try something else."
 				else:
 					EN_tryagain()
@@ -891,7 +893,7 @@ def EN(username):
 					print("Mia: "+ str(mia_brain))
 					say(mia_brain)
 
-def VN_compare(you,username,loichao,volume):
+def VN_compare(you,username,loichao,volume,temp):
 	if "Chào" in you or "Xin chào" in you or "hi" in you or "Hello" in you:
 		mia_brain = VN_hi(loichao)
 		return mia_brain
@@ -984,8 +986,16 @@ def VN_compare(you,username,loichao,volume):
 	elif "dạy" in you:
 		mia_brain = VN_teach()
 		return mia_brain
+	elif "Ok" in you or "ok" in you or "OK" in you:
+		webbrowser.open_new(temp)
+		mia_brain="Đang mở "
+		print(mia_brain + temp)
+		noi(gTTS(mia_brain,lang='vi',slow=False))
+		time.sleep(5)
+		runai=1
+		return runai
 
-def EN_compare(you,username,loichao,volume):
+def EN_compare(you,username,loichao,volume,temp):
 	if "Hi" in you or "Hello" in you or "hi" in you or "hello" in you:
 		mia_brain = EN_hi(loichao)
 		return mia_brain
@@ -1078,6 +1088,14 @@ def EN_compare(you,username,loichao,volume):
 	elif "teach" in you or "teaching" in you or "study" in you:
 		mia_brain = EN_teach()
 		return mia_brain
+	elif "Ok" in you or "ok" in you or "OK" in you:
+		webbrowser.open_new(temp)
+		mia_brain="Opening "
+		print(mia_brain + temp)
+		say(mia_brain)
+		time.sleep(5)
+		runai=1
+		return runai
 
 if __name__ == "__main__":
 	main()
