@@ -353,6 +353,9 @@ def VN_wikipedia(): #Wikipedia
 		mia_brain="Xin chào tôi là Wikipedia! Mời bạn nói."
 		print("Wikipedia: " + mia_brain)
 		noi(gTTS(mia_brain,lang='vi',slow=False))
+		mia_brain="Mình đang nghe"
+		print("Wikipedia: " + mia_brain)
+		noi(gTTS(mia_brain,lang='vi',slow=False))
 		audio = mia_ear.listen(mic,timeout=10, phrase_time_limit=10)
 	try:
 		wiki = mia_ear.recognize_google(audio,language="vi-VI")
@@ -370,11 +373,11 @@ def VN_wikipedia(): #Wikipedia
 		webbrowser.open('https://vi.wikipedia.org/wiki/'+ wiki.replace(" ","_"))
 		wikipedia.set_lang("vi")
 		wiki=wikipedia.summary(wiki)
-		print("Wikipedia: " + wiki)
-		noi(gTTS(wiki,lang='vi',slow=False))
-		mia_brain="Đây là cuối của bản tin."
+		mia_brain="------------------------------------------------"
 		print("Wikipedia: " + mia_brain)
-		noi(gTTS(mia_brain,lang='vi',slow=False))
+		print("Wikipedia: " + wiki)
+		mia_brain="------------------------------------------------"
+		print("Wikipedia: " + mia_brain)
 		mia_brain="Mời Mia!"
 		print("Wikipedia: " + mia_brain)
 		noi(gTTS(mia_brain,lang='vi',slow=False))
@@ -383,6 +386,9 @@ def VN_wikipedia(): #Wikipedia
 def EN_wikipedia(): #Wikipedia
 	with sr.Microphone() as mic:
 		mia_brain="Hi I'm Wikipedia! How can i help you?"
+		print("Wikipedia: " + mia_brain)
+		say(mia_brain)
+		mia_brain="I'm listening"
 		print("Wikipedia: " + mia_brain)
 		say(mia_brain)
 		audio = mia_ear.listen(mic,timeout=10, phrase_time_limit=10)
@@ -402,11 +408,11 @@ def EN_wikipedia(): #Wikipedia
 		webbrowser.open('https://en.wikipedia.org/wiki/'+ wiki.replace(" ","_"))
 		wikipedia.set_lang("en")
 		wiki=wikipedia.summary(wiki)
-		print("Wikipedia: " + wiki)
-		say(wiki)
-		mia_brain="It's the end."
+		mia_brain="------------------------------------------"
 		print("Wikipedia: " + mia_brain)
-		say(mia_brain)
+		print("Wikipedia: " + wiki)
+		mia_brain="------------------------------------------"
+		print("Wikipedia: " + mia_brain)
 		mia_brain="Mia turn!"
 		print("Wikipedia: " + mia_brain)
 		say(mia_brain)
@@ -517,18 +523,32 @@ def EN_bye(): #Tắt AI
 	runai=2
 	return runai
 
+def VN_exit(): #Tắt AI
+	mia_brain="Cảm ơn bạn đã sử dụng Trợ lý ảo Mia Assistant"
+	print("Mia: ",mia_brain)
+	noi(gTTS(mia_brain,lang='vi',slow=False))
+	runai=3
+	return runai
+
+def EN_exit(): #Tắt AI
+	mia_brain="Thank you for using Mia Assistant"
+	print("Mia: ",mia_brain)
+	say(mia_brain)
+	runai=3
+	return runai
+
 def VN_goodnight(): #Ngủ
 	mia_brain="Good night"
 	print("Mia: ",mia_brain)
 	noi(gTTS(mia_brain,lang='vi',slow=False))
-	runai=2
+	runai=3
 	return runai
 
 def EN_goodnight(): #Ngủ
 	mia_brain="Good night"
 	print("Mia: ",mia_brain)
 	say(mia_brain)
-	runai=2
+	runai=3
 	return runai
 
 def VN_sleep(): #Sleep
@@ -710,7 +730,8 @@ def VN(username):
 	o=0 
 	stopai=0
 	temp=""
-	while True:
+	check = True
+	while check == True:
 		with sr.Microphone() as mic:
 			mia_brain="Đang chờ lệnh!"
 			print("Mia: " + mia_brain)
@@ -784,14 +805,21 @@ def VN(username):
 				else:
 					VN_tryagain()
 					continue
-
+				if mia_brain != "Xin lỗi! Mình chưa được dạy về nó, hãy thử lại nhé.":
+					stopai=0
 				if mia_brain == 2:
 					break
 				elif mia_brain == 1:
 					continue
+				elif mia_brain == 3:
+					check = False
+					break
 				else:
 					print("Mia: "+ str(mia_brain))
 					noi(gTTS(mia_brain,lang='vi',slow=False))
+		elif "stop" in you or "exit" in you or "thoát" in you:
+			mia_brain = VN_exit()
+			break
 
 def EN(username):
 	# Các biến số ban đầu
@@ -810,7 +838,8 @@ def EN(username):
 	o=0 
 	stopai=0
 	temp=""
-	while True:
+	check = True
+	while check == True:
 		with sr.Microphone() as mic:
 			mia_brain="I'm waitting!"
 			print("Mia: " + mia_brain)
@@ -885,16 +914,24 @@ def EN(username):
 					EN_tryagain()
 					continue
 
+				if mia_brain != "Sorry, I haven't learnt it yet! Let's try something else.":
+					stopai=0
 				if mia_brain == 2:
 					break
 				elif mia_brain == 1:
 					continue
+				elif mia_brain == 3:
+					check = False
+					break
 				else:
 					print("Mia: "+ str(mia_brain))
 					say(mia_brain)
+		elif "stop" in you or "exit" in you or "thoát" in you:
+			mia_brain = EN_exit()
+			break
 
 def VN_compare(you,username,loichao,volume,temp):
-	if "Chào" in you or "Xin chào" in you or "hi" in you or "Hello" in you:
+	if "Chào" in you or "Xin chào" in you or "Hello" in you:
 		mia_brain = VN_hi(loichao)
 		return mia_brain
 	elif "dịch" in you or "từ điển" in you:
@@ -903,7 +940,7 @@ def VN_compare(you,username,loichao,volume,temp):
 	elif "Flappy Bird" in you:
 		mia_brain = VN_Flappybird()
 		return mia_brain
-	elif "yêu" in you:
+	elif "yêu" in you or "love" in you or "Yêu" in you:
 		mia_brain = VN_love()
 		return mia_brain
 	elif "ngày" in you:
@@ -926,7 +963,7 @@ def VN_compare(you,username,loichao,volume,temp):
 	elif "Opera" in you or "Google" in you or "duyệt web" in you or "Duyệt web" in you or "Lướt web" in you: 
 		mia_brain = VN_browser()
 		return mia_brain
-	elif "tìm kiếm" in you:
+	elif "tìm kiếm" in you or "Tìm kiếm" in you:
 		mia_brain = VN_search()
 		return mia_brain
 	elif "Facebook" in you:
@@ -953,7 +990,7 @@ def VN_compare(you,username,loichao,volume,temp):
 	elif "Good night" in you or "goodnight" in you:
 		mia_brain = VN_goodnight()
 		return mia_brain
-	elif "what the f***" in you:
+	elif "what the f***" in you or "What the f***" in you:
 		mia_brain = "fuck you"
 		return mia_brain
 	elif "giảm volume" in you or "giảm âm lượng" in you:
@@ -992,8 +1029,13 @@ def VN_compare(you,username,loichao,volume,temp):
 		print(mia_brain + temp)
 		noi(gTTS(mia_brain,lang='vi',slow=False))
 		time.sleep(5)
+		# os.system("pause")
 		runai=1
 		return runai
+	elif "stop" in you or "exit" in you or "thoát" in you:
+		mia_brain = VN_exit()
+		return mia_brain
+
 
 def EN_compare(you,username,loichao,volume,temp):
 	if "Hi" in you or "Hello" in you or "hi" in you or "hello" in you:
@@ -1096,6 +1138,9 @@ def EN_compare(you,username,loichao,volume,temp):
 		time.sleep(5)
 		runai=1
 		return runai
+	elif "stop" in you or "exit" in you:
+		mia_brain = EN_exit()
+		return mia_brain
 
 if __name__ == "__main__":
 	main()

@@ -19,11 +19,13 @@ pip install googletrans
 pip install keyboard
 pip install Color_Console
 pip install youtube_search
+cd data
 pip install PyAudio-0.2.11-cp39-cp39-win_amd64.whl
+pause
 cls
 echo "   -----   DONE   -----   "
 pause
-cd..
+cd ..
 py GUI.py
 pause
-py Mia.py
+Mia
