@@ -349,6 +349,15 @@ def EN_facebook(you): #Facebook
 	return runai
 
 def VN_wikipedia(): #Wikipedia
+	devices = AudioUtilities.GetSpeakers()
+	interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+	volume = cast(interface, POINTER(IAudioEndpointVolume))
+	currentVolumeDb = volume.GetMasterVolumeLevel()
+	currentVol=currentVolumeDb
+	volume.SetMasterVolumeLevel(-28, None)
+	currentVolumeDb2 = volume.GetMasterVolumeLevel()
+	times=currentVolumeDb - currentVolumeDb2
+	volume.SetMasterVolumeLevel(currentVolumeDb, None)
 	with sr.Microphone() as mic:
 		mia_brain="Xin chào tôi là Wikipedia! Mời bạn nói."
 		print("Wikipedia: " + mia_brain)
@@ -356,7 +365,15 @@ def VN_wikipedia(): #Wikipedia
 		mia_brain="Mình đang nghe"
 		print("Wikipedia: " + mia_brain)
 		noi(gTTS(mia_brain,lang='vi',slow=False))
+		while currentVolumeDb>=currentVolumeDb2:
+			currentVolumeDb=currentVolumeDb - 1
+			volume.SetMasterVolumeLevel(currentVolumeDb -0.4, None) # decreases the system volume by 1
+			time.sleep(0.7/times)
 		audio = mia_ear.listen(mic,timeout=10, phrase_time_limit=10)
+		while currentVolumeDb<currentVol:
+			currentVolumeDb=currentVolumeDb + 1
+			volume.SetMasterVolumeLevel(currentVolumeDb, None) # decreases the system volume by 1
+			time.sleep(0.7/times)
 	try:
 		wiki = mia_ear.recognize_google(audio,language="vi-VI")
 	except:
@@ -370,20 +387,24 @@ def VN_wikipedia(): #Wikipedia
 		return runai
 
 	if wiki != "Mình xin lỗi":
-		webbrowser.open('https://vi.wikipedia.org/wiki/'+ wiki.replace(" ","_"))
-		wikipedia.set_lang("vi")
-		wiki=wikipedia.summary(wiki)
-		mia_brain="------------------------------------------------"
+		mia_brain="Đang mở tìm kiếm về " + str(wiki)
 		print("Wikipedia: " + mia_brain)
-		print("Wikipedia: " + wiki)
-		mia_brain="------------------------------------------------"
-		print("Wikipedia: " + mia_brain)
+		noi(gTTS(mia_brain,lang='vi',slow=False))
 		mia_brain="Mời Mia!"
 		print("Wikipedia: " + mia_brain)
 		noi(gTTS(mia_brain,lang='vi',slow=False))
 		return runai
 
 def EN_wikipedia(): #Wikipedia
+	devices = AudioUtilities.GetSpeakers()
+	interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+	volume = cast(interface, POINTER(IAudioEndpointVolume))
+	currentVolumeDb = volume.GetMasterVolumeLevel()
+	currentVol=currentVolumeDb
+	volume.SetMasterVolumeLevel(-28, None)
+	currentVolumeDb2 = volume.GetMasterVolumeLevel()
+	times=currentVolumeDb - currentVolumeDb2
+	volume.SetMasterVolumeLevel(currentVolumeDb, None)
 	with sr.Microphone() as mic:
 		mia_brain="Hi I'm Wikipedia! How can i help you?"
 		print("Wikipedia: " + mia_brain)
@@ -391,7 +412,15 @@ def EN_wikipedia(): #Wikipedia
 		mia_brain="I'm listening"
 		print("Wikipedia: " + mia_brain)
 		say(mia_brain)
+		while currentVolumeDb>=currentVolumeDb2:
+			currentVolumeDb=currentVolumeDb - 1
+			volume.SetMasterVolumeLevel(currentVolumeDb -0.4, None) # decreases the system volume by 1
+			time.sleep(0.7/times)
 		audio = mia_ear.listen(mic,timeout=10, phrase_time_limit=10)
+		while currentVolumeDb<currentVol:
+			currentVolumeDb=currentVolumeDb + 1
+			volume.SetMasterVolumeLevel(currentVolumeDb, None) # decreases the system volume by 1
+			time.sleep(0.7/times)
 	try:
 		wiki = mia_ear.recognize_google(audio)
 	except:
@@ -405,14 +434,9 @@ def EN_wikipedia(): #Wikipedia
 		return runai
 
 	if wiki != "I'm so sorry!!":
-		webbrowser.open('https://en.wikipedia.org/wiki/'+ wiki.replace(" ","_"))
-		wikipedia.set_lang("en")
-		wiki=wikipedia.summary(wiki)
-		mia_brain="------------------------------------------"
+		mia_brain="Open reseaching about " + str(wiki)
 		print("Wikipedia: " + mia_brain)
-		print("Wikipedia: " + wiki)
-		mia_brain="------------------------------------------"
-		print("Wikipedia: " + mia_brain)
+		say(mia_brain)
 		mia_brain="Mia turn!"
 		print("Wikipedia: " + mia_brain)
 		say(mia_brain)
