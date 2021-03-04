@@ -387,6 +387,7 @@ def VN_wikipedia(): #Wikipedia
 		return runai
 
 	if wiki != "Mình xin lỗi":
+		webbrowser.open('https://vi.wikipedia.org/wiki/'+ wiki.replace(" ","_"))
 		mia_brain="Đang mở tìm kiếm về " + str(wiki)
 		print("Wikipedia: " + mia_brain)
 		noi(gTTS(mia_brain,lang='vi',slow=False))
@@ -435,6 +436,7 @@ def EN_wikipedia(): #Wikipedia
 		return runai
 
 	if wiki != "I'm so sorry!!":
+		webbrowser.open('https://en.wikipedia.org/wiki/'+ wiki.replace(" ","_"))
 		mia_brain="Open reseaching about " + str(wiki)
 		print("Wikipedia: " + mia_brain)
 		say(mia_brain)
