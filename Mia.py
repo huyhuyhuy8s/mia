@@ -767,7 +767,7 @@ def VN(username):
 			you = ""
 		print("You: " + you)
 		
-		if "Hi Mia" in you or "hi Mia" in you or "hey Mia" in you or "Hey Mia" in you or "Hey" in you or "hey" in you or "Chào Mia" in you:
+		if "Hi" in you or "hi" in you or "Hi Mia" in you or "hi Mia" in you or "hey Mia" in you or "Hey Mia" in you or "Hey" in you or "hey" in you or "Chào Mia" in you:
 			o=2
 
 			if thoigian >= 23 or thoigian <= 3: #Ngủ đei
@@ -875,7 +875,7 @@ def EN(username):
 			you = ""
 		print("You: " + you)
 		
-		if "Hi Mia" in you or "hi Mia" in you or "hey Mia" in you or "Hey Mia" in you or "Hey" in you or "hey" in you or "Chào Mia" in you:
+		if "Hi" in you or "hi" in you or "Hi Mia" in you or "hi Mia" in you or "hey Mia" in you or "Hey Mia" in you or "Hey" in you or "hey" in you or "Chào Mia" in you:
 			o=2
 
 			if thoigian >= 23 or thoigian <= 3: #Ngủ đei
