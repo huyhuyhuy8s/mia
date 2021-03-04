@@ -393,6 +393,7 @@ def VN_wikipedia(): #Wikipedia
 		mia_brain="Mời Mia!"
 		print("Wikipedia: " + mia_brain)
 		noi(gTTS(mia_brain,lang='vi',slow=False))
+		runai=1
 		return runai
 
 def EN_wikipedia(): #Wikipedia
